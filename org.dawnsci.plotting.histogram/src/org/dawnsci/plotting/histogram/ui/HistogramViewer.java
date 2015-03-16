@@ -89,6 +89,8 @@ public class HistogramViewer extends ContentViewer {
 		};
 	};
 
+	private boolean locked;
+
 	/**
 	 * Create a new Histogram Widget with a newly created plotting system.
 	 *
@@ -552,10 +554,6 @@ public class HistogramViewer extends ContentViewer {
 	}
 
 
-	public void rescaleAxis() {
-		histogramPlottingSystem.autoscaleAxes();
-	}
-	
 	public void lockHistoViewer(boolean locked){
 		this.locked = locked;
 		getHistogramProvider().setLocked(locked);
