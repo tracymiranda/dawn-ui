@@ -43,7 +43,6 @@ public class HistogramLockTest extends PluginTestBase {
 
 	@Parameters
 	public static Collection<Object[]> data() {
-		// input, expected (null for == input)
 		List<Object[]> params = new ArrayList<>();
 
 		Dataset input;
