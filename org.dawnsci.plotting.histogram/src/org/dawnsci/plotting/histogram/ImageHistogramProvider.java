@@ -36,6 +36,9 @@ public class ImageHistogramProvider implements IHistogramProvider {
 	 */
 	private IDataset[] histogramValues;
 
+	private double savedMin = Double.NaN;
+	private double savedMax = Double.NaN;
+
 	public ImageHistogramProvider() {
 
 	}
@@ -278,7 +281,7 @@ public class ImageHistogramProvider implements IHistogramProvider {
 
 		@Override
 		public void minChanged(PaletteEvent event) {
-			System.out.println("provider minChanged " + getMax());
+			System.out.println("provider minChanged " + getMin());
 			viewer.refresh();
 		}
 
@@ -287,6 +290,35 @@ public class ImageHistogramProvider implements IHistogramProvider {
 			System.out.println("provider maxChanged " + getMax());
 			viewer.refresh();
 		}
+		
+		@Override
+		public void minCutChanged(PaletteEvent event) {
+			System.out.println("provider minCutChanged " + getMininumRange());
+			viewer.refresh();
+		}
+		
+		@Override
+		public void maxCutChanged(PaletteEvent event) {
+			System.out.println("provider maxCutChanged " + getMaximumRange());
+			viewer.refresh();
+		}
+	}
+	
+	public void setSavedMin(double savedMin){
+		this.savedMin = savedMin;
+	}
+	
+	public void setSavedMax(double savedMax){
+		this.savedMax = savedMax;
+	}
+	
+
+	public double getSavedMin(){
+		return this.savedMin;
+	}
+	
+	public double getSavedMax(){
+		return this.savedMax;
 	}
 
 

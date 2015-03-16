@@ -101,4 +101,12 @@ public interface IHistogramProvider extends IContentProvider{
 
 	}
 
+	public double getSavedMin();
+
+	public double getSavedMax();
+
+	public void setSavedMin(double min);
+
+	public void setSavedMax(double max);
+
 }

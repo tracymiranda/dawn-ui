@@ -65,7 +65,9 @@ public class HistogramViewer extends ContentViewer {
 
 	private FloatSpinner minText;
 	private FloatSpinner maxText;
-
+	
+	private boolean locked;
+	
 	private ILineTrace histoTrace;
 	private ILineTrace redTrace;
 	private ILineTrace greenTrace;
@@ -82,9 +84,9 @@ public class HistogramViewer extends ContentViewer {
 			IROI roi = evt.getROI();
 			if (roi instanceof RectangularROI) {
 				RectangularROI rroi = (RectangularROI) roi;
-				getHistogramProvider().setMin(rroi.getPoint()[0]);
+				setUserMin(rroi.getPoint()[0]);
 				double max = rroi.getEndPoint()[0];
-				getHistogramProvider().setMax(max);
+				setUserMax(max);
 			}
 		};
 	};
@@ -322,14 +324,14 @@ public class HistogramViewer extends ContentViewer {
 		minText.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				getHistogramProvider().setMin(minText.getDouble());
+				setUserMin(minText.getDouble());;
 			}
 		});
 
 		maxText.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				getHistogramProvider().setMax(maxText.getDouble());
+				setUserMax(maxText.getDouble());;
 			}
 		});
 
@@ -365,7 +367,16 @@ public class HistogramViewer extends ContentViewer {
 		} else {
 			logger.debug("HistogramViewer: inputchanged oldInput " + oldInput);
 		}
-
+		
+		if (locked){
+			double savedMin = getHistogramProvider().getSavedMin();
+			double savedMax = getHistogramProvider().getSavedMax();
+			if (savedMax != Double.NaN && savedMin  != Double.NaN)
+			{
+				getHistogramProvider().setMin(savedMin);
+				getHistogramProvider().setMax(savedMax);
+			}
+		}
 		refresh();
 	};
 
@@ -486,5 +497,23 @@ public class HistogramViewer extends ContentViewer {
 
 	public void rescaleAxis() {
 		histogramPlottingSystem.autoscaleAxes();
+	}
+	
+	public void lockHistoViewer(boolean locked){
+		this.locked = locked;
+		double minToSave = getHistogramProvider().getMin();
+		double maxToSave = getHistogramProvider().getMax();
+		getHistogramProvider().setSavedMin(minToSave);
+		getHistogramProvider().setSavedMax(maxToSave);
+	}
+	
+	public void setUserMin(double min){
+		getHistogramProvider().setSavedMin(min);
+		getHistogramProvider().setMin(min);
+	}
+	
+	public void setUserMax(double max){
+		getHistogramProvider().setSavedMax(max);
+		getHistogramProvider().setMax(max);
 	}
 }
