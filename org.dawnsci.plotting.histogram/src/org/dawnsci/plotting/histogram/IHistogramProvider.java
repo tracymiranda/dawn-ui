@@ -47,6 +47,41 @@ public interface IHistogramProvider extends IContentProvider{
 	 * @param double min value
 	 */
 	public void setMin(double min);
+	
+	/**
+	 * Sets the saved min value for future use if histogram locked
+	 *
+	 * @param double min value
+	 */
+	public void setSavedMin(double min);
+
+	/**
+	 * Sets the saved max value for future use if histogram locked
+	 *
+	 * @param double max value
+	 */
+	public void setSavedMax(double max);
+	
+	/**
+	 * Return the saved min value (called when histogram locked)
+	 *
+	 * @return double min value
+	 */
+	public double getSavedMin();
+
+	/**
+	 * Return the saved max value (called when histogram locked)
+	 *
+	 * @return double max value
+	 */
+	public double getSavedMax();
+
+	/**
+	 * Sets lock status of the histogram
+	 *
+	 * @param boolean lock status
+	 */
+	public void setLocked(boolean locked);
 
 	/**
 	 * Return true if the Log Color Scale option is active
@@ -100,13 +135,5 @@ public interface IHistogramProvider extends IContentProvider{
 		public IDataset getRGBX();
 
 	}
-
-	public double getSavedMin();
-
-	public double getSavedMax();
-
-	public void setSavedMin(double min);
-
-	public void setSavedMax(double max);
 
 }

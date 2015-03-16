@@ -84,9 +84,9 @@ public class HistogramViewer extends ContentViewer {
 			IROI roi = evt.getROI();
 			if (roi instanceof RectangularROI) {
 				RectangularROI rroi = (RectangularROI) roi;
-				setUserMin(rroi.getPoint()[0]);
+				getHistogramProvider().setMin(rroi.getPoint()[0]);
 				double max = rroi.getEndPoint()[0];
-				setUserMax(max);
+				getHistogramProvider().setMax(max);
 			}
 		};
 	};
@@ -324,14 +324,14 @@ public class HistogramViewer extends ContentViewer {
 		minText.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				setUserMin(minText.getDouble());;
+				getHistogramProvider().setMin(minText.getDouble());
 			}
 		});
 
 		maxText.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				setUserMax(maxText.getDouble());;
+				getHistogramProvider().setMax(maxText.getDouble());
 			}
 		});
 
@@ -369,6 +369,7 @@ public class HistogramViewer extends ContentViewer {
 		}
 		
 		if (locked){
+			// Retrieve the saved min/max and set this for the new trace
 			double savedMin = getHistogramProvider().getSavedMin();
 			double savedMax = getHistogramProvider().getSavedMax();
 			if (savedMax != Double.NaN && savedMin  != Double.NaN)
@@ -376,6 +377,7 @@ public class HistogramViewer extends ContentViewer {
 				getHistogramProvider().setMin(savedMin);
 				getHistogramProvider().setMax(savedMax);
 			}
+			getHistogramProvider().setLocked(locked);
 		}
 		refresh();
 	};
@@ -501,19 +503,8 @@ public class HistogramViewer extends ContentViewer {
 	
 	public void lockHistoViewer(boolean locked){
 		this.locked = locked;
-		double minToSave = getHistogramProvider().getMin();
-		double maxToSave = getHistogramProvider().getMax();
-		getHistogramProvider().setSavedMin(minToSave);
-		getHistogramProvider().setSavedMax(maxToSave);
-	}
-	
-	public void setUserMin(double min){
-		getHistogramProvider().setSavedMin(min);
-		getHistogramProvider().setMin(min);
-	}
-	
-	public void setUserMax(double max){
-		getHistogramProvider().setSavedMax(max);
-		getHistogramProvider().setMax(max);
+		getHistogramProvider().setLocked(locked);
+		getHistogramProvider().setSavedMin(getHistogramProvider().getMin());
+		getHistogramProvider().setSavedMax(getHistogramProvider().getMax());
 	}
 }

@@ -268,6 +268,27 @@ public class ImageHistogramProvider implements IHistogramProvider {
 		image.setMin(min);
 		image.setPaletteData(image.getPaletteData()); //Workaround to force image to repaint, see DAWNSCI-5834
 	}
+	
+	@Override
+	public void setSavedMin(double savedMin){
+		this.savedMin = savedMin;
+	}
+	
+	@Override
+	public void setSavedMax(double savedMax){
+		this.savedMax = savedMax;
+	}
+	
+	@Override
+	public double getSavedMin(){
+		return this.savedMin;
+	}
+	
+	@Override
+	public double getSavedMax(){
+		return this.savedMax;
+	}
+
 
 	//TODO: ADD IN other events...
 	//TODO: more fine grained updating than refresh??
@@ -282,45 +303,18 @@ public class ImageHistogramProvider implements IHistogramProvider {
 		@Override
 		public void minChanged(PaletteEvent event) {
 			System.out.println("provider minChanged " + getMin());
+			setSavedMin(getMin());
 			viewer.refresh();
 		}
 
 		@Override
 		public void maxChanged(PaletteEvent event) {
 			System.out.println("provider maxChanged " + getMax());
-			viewer.refresh();
-		}
-		
-		@Override
-		public void minCutChanged(PaletteEvent event) {
-			System.out.println("provider minCutChanged " + getMininumRange());
-			viewer.refresh();
-		}
-		
-		@Override
-		public void maxCutChanged(PaletteEvent event) {
-			System.out.println("provider maxCutChanged " + getMaximumRange());
+			setSavedMax(getMax());
 			viewer.refresh();
 		}
 	}
 	
-	public void setSavedMin(double savedMin){
-		this.savedMin = savedMin;
-	}
-	
-	public void setSavedMax(double savedMax){
-		this.savedMax = savedMax;
-	}
-	
-
-	public double getSavedMin(){
-		return this.savedMin;
-	}
-	
-	public double getSavedMax(){
-		return this.savedMax;
-	}
-
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -348,5 +342,10 @@ public class ImageHistogramProvider implements IHistogramProvider {
 	@Override
 	public boolean isLogColorScale() {
 		return bean.isLogColorScale();
+	}
+
+	@Override
+	public void setLocked(boolean locked) {
+		image.setRescaleHistogram(!locked);
 	}
 }

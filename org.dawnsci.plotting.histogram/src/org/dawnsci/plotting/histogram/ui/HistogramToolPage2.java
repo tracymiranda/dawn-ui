@@ -58,8 +58,6 @@ public class HistogramToolPage2 extends AbstractToolPage implements IToolPage {
 
 	private ITraceListener traceListener = new TraceListener();
 
-	//private IPaletteListener paletteListener = new PaletteListener();
-
 	private SelectionAdapter colourSchemeListener;
 
 	private Button logScaleCheck;
@@ -237,8 +235,6 @@ public class HistogramToolPage2 extends AbstractToolPage implements IToolPage {
 
 		lockAction = new Action("Lock histogram range", IAction.AS_CHECK_BOX) {
 			public void run() {
-				//IImageTrace image = getImageTrace();
-				//image.setRescaleHistogram(!isChecked());
 				histogramWidget.lockHistoViewer(isChecked());
 			}
 		};
@@ -264,7 +260,6 @@ public class HistogramToolPage2 extends AbstractToolPage implements IToolPage {
 
 		IPaletteTrace paletteTrace = getPaletteTrace();
 		if (paletteTrace != null) {
-			//paletteTrace.addPaletteListener(paletteListener);
 			logger.debug("HistogramToolPage: activate - palette trace "
 					+ paletteTrace.hashCode());
 			updateHistogramUIElements(paletteTrace);
@@ -285,9 +280,6 @@ public class HistogramToolPage2 extends AbstractToolPage implements IToolPage {
 		}
 
 		//palette trace is not always set in the activate stage, so could be null
-		/*if (getPaletteTrace() != null){
-			getPaletteTrace().removePaletteListener(paletteListener);
-		}*/	
 	}
 
 	/**
@@ -403,7 +395,6 @@ public class HistogramToolPage2 extends AbstractToolPage implements IToolPage {
 			logger.debug("HistogramToolPage: traceAdded");
 			IPaletteTrace it = (IPaletteTrace) evt.getSource();
 			updateHistogramUIElements(it);
-			//it.addPaletteListener(paletteListener);
 		}
 
 		@Override
@@ -426,12 +417,5 @@ public class HistogramToolPage2 extends AbstractToolPage implements IToolPage {
 
 	};
 
-	/*private final class PaletteListener extends IPaletteListener.Stub{
-		@Override
-		public void rescaleHistogramChanged(PaletteEvent evt) {
-			boolean locked = !((IPaletteTrace)evt.getSource()).isRescaleHistogram();
-			lockAction.setChecked(locked);
-		}
-	}*/
 
 }
