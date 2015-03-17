@@ -1,31 +1,22 @@
 package org.dawnsci.plotting.histogram.ui;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-
-import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.plotting.api.histogram.HistogramBound;
-import org.eclipse.dawnsci.plotting.api.histogram.IPaletteService;
 import org.eclipse.dawnsci.plotting.api.tool.IToolPage;
 import org.eclipse.dawnsci.plotting.api.tool.IToolPageSystem;
-import org.eclipse.dawnsci.plotting.api.trace.ILineTrace;
 import org.eclipse.dawnsci.plotting.api.trace.IPaletteTrace;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.intro.IIntroPart;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
