@@ -221,7 +221,7 @@ public class HistogramToolPage2 extends AbstractToolPage implements IToolPage {
 			public void run() {
 				IImageTrace imageTrace = getImageTrace();
 				if (imageTrace != null) {
-					imageTrace.rehistogram();
+					imageTrace.resetHistogram();
 					histogramWidget.rescaleAxis();
 				}
 			}
