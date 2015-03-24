@@ -237,7 +237,8 @@ public class ImageTrace extends Figure implements IImageTrace, IAxisListener, IT
 		NO_REIMAGE,
 		REIMAGE_ALLOWED,
 		FORCE_REIMAGE, 
-		REHISTOGRAM;
+		REHISTOGRAM,
+		RESETHISTOGRAM;
 	}
 	private Image            scaledImage;
 	private ImageData        imageData;
@@ -268,7 +269,8 @@ public class ImageTrace extends Figure implements IImageTrace, IAxisListener, IT
 
 		boolean requireImageGeneration = imageData==null || 
 				                         rescaleType==ImageScaleType.FORCE_REIMAGE || 
-				                         rescaleType==ImageScaleType.REHISTOGRAM; // We know that it is needed
+				                         rescaleType==ImageScaleType.REHISTOGRAM || 
+										 rescaleType==ImageScaleType.RESETHISTOGRAM; // We know that it is needed
 		
 		// If we just changed downsample scale, we force the update.
 	    // This allows user resizes of the plot area to be picked up
@@ -312,6 +314,24 @@ public class ImageTrace extends Figure implements IImageTrace, IAxisListener, IT
 					setMin(fa[0]);
 					setMax(fa[1]);
 
+				}
+				if (rescaleType==ImageScaleType.RESETHISTOGRAM) {
+
+					Dataset data = (Dataset)getData();
+					ImageServiceBean histoBean = imageServiceBean.clone();
+					histoBean.setImage(data);
+					
+					if (fullMask!=null){
+						int[] shape = data.getShape();
+						Range xAxisRangeOrig = new Range(0, shape[1]);
+						Range yAxisRangeOrig = new Range(shape[0], 0);
+						histoBean.setMask(slice(xAxisRangeOrig, yAxisRangeOrig, fullMask));
+					}
+					
+					double[] fa = service.getFastStatistics(histoBean);
+					setMin(fa[0]);
+					setMax(fa[1]);
+					performAutoscale();
 				}
 								
 				this.imageData   = service.getImageData(imageServiceBean);
@@ -573,7 +593,7 @@ public class ImageTrace extends Figure implements IImageTrace, IAxisListener, IT
 			}
 			
 			final Downsample downSampler = new Downsample(mode, new int[]{bin,bin});
-			List<? extends Dataset>   sets = downSampler.value(image);
+			List<? extends Dataset>   sets = (List<? extends Dataset>) downSampler.value(image);
 			final Dataset set = sets.get(0);
 			
 			if (image.getDtype()!=Dataset.BOOL) {
@@ -1215,6 +1235,18 @@ public class ImageTrace extends Figure implements IImageTrace, IAxisListener, IT
 		repaint();
 	}
 	
+	@Override
+	public void resetHistogram() {
+		if (imageServiceBean==null) return;
+		imageServiceBean.setMax(null);
+		imageServiceBean.setMin(null);
+		createScaledImage(ImageScaleType.RESETHISTOGRAM, null);
+		// Max and min changed in all likely-hood
+		fireMaxDataListeners();
+		fireMinDataListeners();
+		repaint();
+	}
+	
 	public void remask() {
 		if (imageServiceBean==null) return;
 		
@@ -1561,5 +1593,5 @@ public class ImageTrace extends Figure implements IImageTrace, IAxisListener, IT
 	public void setDataName(String dataName) {
 		this.dataName = dataName;
 	}
-	
+
 }
